@@ -128,5 +128,151 @@ HocSinh arr[5];
 HocSinh* arr = new HocSinh[5];
 ```
 ### Phương thức thiết lập nhận tham số đầu vào (parameterized constructor).
+Là các phương thức thiết lập sử dụng các đối số được truyền vào nó để khởi tạo dữ liệu cho các thuộc tính của đối tượng.
+```cpp
+HocSinh (int id, string name, int toan, int van)
+{
+  mssv = id;
+  hoTen = name;
+  diemToan = toan;
+  diemVan = van;
+  XuLy ();
+}
+```
+Để gọi phương thức thiết lập vừa định nghĩa ở trên, ta sẽ khai báo đối tượng hs như sau:
+```cpp
+  HocSinh hs(22120123, "Minh Hung", 9, 8);
+```
+Ta có thể định nghĩa nhiều phương thức thiết lập khác miễn là chúng có danh sách tham số đầu vào khác nhau
+```cpp
+HocSinh (int id, string name)
+{
+  mssv = id;
+  hoTen = name;
+  diemToan = 0;
+  diemVan = 0
+  XuLy ();
+}
+```
+### Phương thức thiết lập sao chép (copy constructor)
+**Nhắc lại kiến thức**
+- Tham chiếu trong C++:
+  - Tham chiếu là một **cái tên khác** cho đối tượng
+  - Tham chiếu được khai báo bằng cách thêm kí tự '&' vào trước tên biến
+    - Ví dụ:
+        ```cpp
+        HocSinh &r = hs;
+        ```
+    -  Khi khái báo một tham chiếu r như trên, chương trình sẽ **không sao chép** giá trị của **hs** vào **r** mà chỉ xem r như một **cái tên khác** của đối tượng hs.
+  - Tham chiếu hằng: một tham chiếu mà không thể dùng để thay đổi giá trị của đối tượng mà nó gắn vào
+    - Ví dụ:
+      ```cpp
+      const HocSinh &r = hs;
+      ```
+  - Một tham chiếu bình thường không thể được gắn với một biến hằng, một tham chiếu hằng có thể được gắn với một biến hằng lẫn biến thường
+    - Ví dụ
+      ```cpp
+      #include <iostream>
+
+      int main() {
+          int x = 5; // biến thường
+          const int y = 10; // biến hằng
+      
+          const int& ref1 = x; // tham chiếu hằng gắn với biến thường
+          const int& ref2 = y; // tham chiếu hằng gắn với biến hằng
+      
+          std::cout << "ref1: " << ref1 << std::endl;
+          std::cout << "ref2: " << ref2 << std::endl;
+      
+          x = 7; // thay đổi giá trị của biến thường
+          // y = 15; // Lỗi! Không thể thay đổi giá trị của biến hằng
+      
+          std::cout << "ref1 sau khi thay doi x: " << ref1 << std::endl;
+          std::cout << "ref2 sau khi thay doi y: " << ref2 << std::endl;
+      
+          return 0;
+      }
+      ```
+      ```cpp
+      ref1: 5
+      ref2: 10
+      ref1 sau khi thay doi x: 7
+      ref2 sau khi thay doi y: 10
+      ```
+Trở lại vấn đề chính, **phương thức thiết lập sao chép** của một lớp đối tượng là phương thức thiết lập có 1 **tham số đầu vào là tham chiếu** tới một đối tượng của lớp đó. Mục đích của phương thức này là để sao chép dữ liệu của một đối tượng vào một đối tượng khác vừa được khai báo
+```cpp
+HocSinh (const HocSinh& temp)
+{
+  cout << "Copy constructor of HocSinh has been called!\n";
+  mssv = temp.mssv;
+  hoTen = temp.hoTen;
+  diemToan = temp.diemToan;
+  diemVan = temp.diemVan;
+  diemTB = temp.diemTB;
+}
+```
+Trong chương trình ta gọi thực hiện phương thức sao chép bằng cách khai báo:
+```cpp
+HocSinh hs2(hs);
+```
+Hoặc:
+```cpp
+HocSinh hs2 = hs;
+```
+Chương trình tới đây sẽ **không sao chép dữ liệu** của hs vào temp mà chỉ xem temp như là **một cái tên khác** của hs<br>
+**Lưu ý!**<br>
+Chúng ta thấy rằng nếu **temp** không được khai báo là tham chiếu mà chỉ là một biến bình thường thì chương trình sẽ ngầm thực hiện dòng lệnh:
+```cpp
+ const HocSinh temp = hs;
+```
+Lúc này trong quá trình thực hiện phương thức thiết lập sao chép để sao chép hs và hs2, chương trình phải gọi thêm một phương thức thiết lập sao chép khác để sao chép **hs** vào **temp**. Cứ như vậy tạo thành một **vòng lặp vô hạn**<br>
+Trong phương thức trên, ta khai báo tham chiếu temp là hằng để đảm bảo đối số truyền vào
+**không thể bị sửa đổi** một cách vô ý, cũng như đảm bảo rằng có thể truyền vào phương thức
+một **đối số hằng**.<br>
+**Một số trường hợp khác mà phương thức thiết lập sao chép được gọi thực hiện:**
+- Khi truyền một đối số vào lời gọi hàm của môt hàm có tham số tương ứng không phải là tham chiếu (vd trên)
+- Khi kết thúc lời gọi hàm, hàm trả về đối tượng mà kiểu dữ liệu của hàm không phải tham chiếu
+- Khi khởi tạo các phần tử của một mảng sử dụng dấu ngoặc nhọn. Ví dụ:
+  ```cpp
+    HocSinh arr[2] = {hs};
+  ```
+  Lúc này chương trình gọi phương thức thiết lập sao chép để sao chép **hs** vào phần tử đầu tiên của mảng, và gọi thực hiện phương thức thiết lập mặc định để khởi tạo giá trị cho phần tử thứ 2
+## Phương thức phá hủy (Destructor)
+- Mục đích:
+ - Thông thường, phương thức phá hủy có nhiệm vụ thu hồi lại tất cả các tài nguyên đã cấp phát cho đối tượng khi đối tượng hết phạm vi hoạt động (scope)
+- Đặc điểm:
+  - Tên phương thức trùng với tên lớp nhưng có dấu ngã ở đằng trước
+  - Không có giá trị trả về
+  - Không có tham số đầu vào
+  - Được tự động gọi thực hiện trước khi đối tượng bị hủy
+  - Có và chỉ có duy nhất một phương thức phá hủy trong một lớp
+  - Trong quá trình sống của đối tượng có và chỉ có một lần phương thức phá hủy được gọi thực hiện
+- Ý nghĩa:
+Một cách dùng của phương thức phá hủy là để giải phóng bộ nhớ của các thuộc tính
+được cấp phát động trong một đối tượng. Nếu chúng ta không giải phóng các vùng
+nhớ này, nó sẽ bị tồn đọng lại và chiếm không gian không cần thiết<br>
+### Phương thức phá hủy và cấp phát động
+```cpp
+class LopHoc
+{
+private:
+	HocSinh* arr;
+	int size;
+public:
+	LopHoc (int size)
+	{
+		this->size = size;
+		arr = new HocSinh[size];
+	}
+};
+```
+Trong hàm main
+```cpp
+int main(){
+    LopHoc lop(70);
+    return 0;
+}
+```
+Khi chương trình kết thúc, đối tượng **lóp** bị phá hủy, kéo theo  
 
 
