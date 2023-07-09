@@ -380,4 +380,24 @@ class MyClass1 {
 	//...
 };
 ```
+Ví dụ
+```cpp
+class LopHoc2
+{
+	friend class LopHoc1;
+private:
+	int riengtu = 2;
+};
+
+class LopHoc1
+{
+private:
+	int riengtu = 1;
+public:
+	void getRiengTu (LopHoc2 lh)
+	{
+		cout << lh.riengtu;
+	}
+};
+```
 
