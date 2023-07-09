@@ -39,3 +39,151 @@ Chúng ta sẽ overload hàm có tên **"operator@"**, với **@** là các toá
 	};
 	```
 - **Cài đặt hàm toàn cục**
+Thông thường nếu ta sử dụng operator+(PhanSo a) thì ta sẽ có PhanSo + PhanSo
+<br>Nếu ta dungf operator-(int i) thì ta có PhanSo + i
+<br> Vậy để có i + PhanSo, ta **cài đặt toàn cục**
+```cpp
+#include<iostream>
+using namespace std;
+
+class PhanSo
+{
+private:
+	int tu, mau;
+public:
+	PhanSo (int tu, int mau)
+	{
+		this->tu= tu;
+		this->mau = mau;
+	}
+	PhanSo ()
+	{
+		tu = 0;
+		mau = 0;
+	}
+	PhanSo operator +(const PhanSo& ps, const int& i);
+	PhanSo operator +(const int& i, const PhanSo& ps);
+
+};
+
+PhanSo operator +(const PhanSo& ps, const int& i)
+{
+	PhanSo kq;
+	kq.tu = ps.tu + i * ps.mau;
+	return kq;
+}
+
+PhanSo operator +(const int& i, const PhanSo& ps)
+{
+	return ps + i;
+}
+
+
+int main ()
+{
+	PhanSo a (1, 2);
+	int i = 1;
+	PhanSo c = a + i;
+}
+```
+Đoạn mã trên bị sai thì operator trong class chỉ chấp nhận 1 tham số. Do đó nếu muốn dùng 2 tham số, ta phải viết lại hàm ở ngoài. Nhưng để viết hàm ở ngoài có được biến private ta phải dùng hàm bạn
+```cpp
+#include<iostream>
+using namespace std;
+
+class PhanSo
+{
+private:
+	int tu, mau;
+public:
+	PhanSo (int tu, int mau)
+	{
+		this->tu= tu;
+		this->mau = mau;
+	}
+	PhanSo ()
+	{
+		tu = 0;
+		mau = 0;
+	}
+	friend PhanSo operator +(const PhanSo& ps, const int& i);
+	friend PhanSo operator +(const int& i, const PhanSo& ps);
+
+};
+
+PhanSo operator +(const PhanSo& ps, const int& i)
+{
+	PhanSo kq;
+	kq.tu = ps.tu + i * ps.mau;
+	return kq;
+}
+
+PhanSo operator +(const int& i, const PhanSo& ps)
+{
+	return ps + i;
+}
+
+
+int main ()
+{
+	PhanSo a (1, 2);
+	int i = 1;
+	PhanSo c = a + i;
+}
+```
+### Chuyển kiểu
+Có 2 loại chuyển kiểu:
+- Chuyển kiểu bằng constructor
+- Chuyển kiểu bằng toán tử chuyển kiểu
+**Chuyển kiểu bằng constructor**
+  ```cpp
+  #include<iostream>
+using namespace std;
+
+class PhanSo
+{
+private:
+	int tu, mau;
+public:
+	PhanSo (int tu, int mau)
+	{
+		this->tu= tu;
+		this->mau = mau;
+	}
+	PhanSo (int a)
+	{
+		this->tu = a;
+		this->mau = 1;
+	}
+	PhanSo ()
+	{
+		tu = 0;
+		mau = 0;
+	}
+	friend PhanSo operator+(const PhanSo& ps1, const PhanSo& ps2);
+
+};
+
+PhanSo operator +(const PhanSo& ps1, const PhanSo& ps2)
+{
+	PhanSo kq;
+	kq.mau = ps1.mau * ps2.mau;
+	kq.tu = ps1.tu * ps2.mau + ps1.mau * ps2.tu;
+	return kq;
+}
+
+int main ()
+{
+	PhanSo a (1, 2);
+	int i = 1;
+	PhanSo c = a + i;
+}
+	```
+**Chuyển kiểu bằng toán tử chuyển kiểu**
+Cú pháp
+```cpp
+operator KieuDL() {
+	return x; // x có kiểu dữ liệu là Kieu_DL
+}
+```
+VD muốn chuyển phân số về số thực
