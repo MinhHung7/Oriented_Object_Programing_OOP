@@ -374,3 +374,10 @@ public:
 	}
 };
 ```
+```cpp
+class MyClass1 {
+	friend class MyClass2;
+	//...
+};
+```
+
