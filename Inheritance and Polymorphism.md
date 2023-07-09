@@ -71,3 +71,48 @@ public:
 };
 ```
 ## Các kiểu kế thừa
+![](https://github.com/MinhHung7/Oriented_Object_Programing_OOP/blob/main/Inheritance%20Table.png)
+<br>Nếu lớp cha có các thuộc tính **protected** và lớp con kế thừa theo kiểu **private** thì các thuộc tính **protected** của cha trở thành các thuộc tính **private** của lớp con
+## Phương thức thiết lập trong kế thừa
+Mặc dù một đối tượng của lớp con được thừa hưởng các thuộc tính từ lớp cha, nó không
+nên trực tiếp khởi tạo dữ liệu cho các thuộc tính đó (trong vài trường hợp thì là không thể
+luôn). Ở các ví dụ trên, lớp BulkQuote kế thừa 2 thuộc tính là bookNo và price từ Quote,
+tuy nhiên bookNo là thành phần private của Quote, kể cả lớp con cũng không truy cập
+được thuộc tính này, dẫn đến việc BulkQuote không thể trực tiếp gán dữ liệu cho bookNo.
+Cho dù các thuộc tính này đều là protected và lớp con có thể truy cập được đi chăng nữa,
+lớp con cũng không nên khởi tạo dữ liệu trực tiếp cho chúng (bởi vì lớp cha có cung cấp các
+giao diện để tương tác với các thuộc tính của nó, lớp con nên tôn trọng và sử dụng giao diện
+này).
+
+Tóm lại, lớp con nên sử dụng phương thức thiết lập của lớp cha để khởi tạo dữ liệu cho
+các thuộc tính chung mà nó được thừa kế. Cách sử dụng như sau (lấy ví dụ là phương thức
+thiết lập cho lớp BulkQuote):
+```cpp
+//Phương thức thiết lập của Quote
+Quote::Quote(string id, double price) : bookNo(id), price(price) {}
+//Phương thức thiết lập của Bulk_quote
+BulkQuote::BulkQuote(string id, double price, double disc, int n)
+				: Quote(id,price), discount(disc), minQty(n) {}
+```
+```cpp
+	BulkQuote derived("22120123", 150000, 0.2, 3);
+```
+**Constructor mặc định**
+Khi một đối tượng của lớp con được khởi tạo mặc định, thứ tự như trên cũng được thực
+hiện, tức là **constructor mặc định của lớp cha được gọi trước** để khởi tạo dữ liệu mặc định
+cho các thuộc tính chung, sau đó constructor của lớp con mới bắt đầu thực hiện việc gán dữ
+liệu cho các thuộc tính riêng.
+## Phép gán và con trỏ trong kế thừa
+Thông thường, một biến con trỏ chỉ có thể giữ địa chỉ của các đối tượng có cùng kiểu với nó, tuy nhiên trong kế thừa có một ngoại lệ: **một con trỏ đối tượng lớp cơ sở có thể giữ địa chỉ của một đối tượng thuộc lớp dẫn xuất**. Dẫu vậy, một con trỏ đối tượng thuộc lớp dẫn xuất không thể giữ địa chỉ của một đối tượng thuộc lớp cơ sở, vd:
+```cpp
+	Quote base;
+	BulkQuote derived;
+	Quote* basePtr = &derived; // Đúng
+	BulkQuote* derivedPtr = &base; // Sai
+```
+Việc có thể gán địa chỉ của một đối tượng thuộc lớp dẫn xuất cho một biến con trỏ đối tượng
+thuộc lớp cơ sở dẫn đến một kết quả quan trọng: Khi sử dụng một con trỏ đối tượng thuộc
+lớp cơ sở, chúng ta không biết chắc được đối tượng mà con trỏ đó sẽ giữ có kiểu dữ liệu gì,
+nó có thể là một đối tượng thuộc lớp cơ sở hoặc lớp dẫn xuất. Điều này góp phần tạo nên
+tính đa hình trong OOP sẽ được tìm hiểu ở chương tới.
+**Phép gán trực tiếp giữa các đối tượng**
