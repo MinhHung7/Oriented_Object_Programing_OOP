@@ -18,3 +18,24 @@ Về bản chất, việc thực hiện các toán tử cũng tương đương v
 	PhanSo ketQua = a.operator+(b);
 ```
 **Các toán tử có thể overload**
+![](https://github.com/MinhHung7/Oriented_Object_Programing_OOP)
+### Cú pháp Overload
+Chúng ta sẽ overload hàm có tên **"operator@"**, với **@** là các toán tử cần overload. Có 2 loại là **hàm cục bộ** và **hàm toàn cục**
+- **Cài đặt với hàm cục bộ**
+  ```cpp
+  class PhanSo {
+	private:
+		int tu;
+		int mau;
+	public:
+		PhanSo() { tu = 0; mau = 1; }
+		PhanSo(int a, int b) { tu = a; mau = b; }
+		PhanSo operator+(const PhanSo& ps){ // overload toán tử +
+			PhanSo kq;
+			kq.tu = this->tu * ps.mau + ps.tu * this->mau;
+			kq.mau = this->mau * ps.mau;
+			return kq;
+		}
+	};
+	```
+- **Cài đặt hàm toàn cục**
