@@ -299,3 +299,56 @@ chương trình tự định nghĩa mà không cần phải tự định nghĩa 
 ```
 - Các dữ liệu thành viên bị hủy và đối tượng chúng thuộc về bị hủy
 ### Phương thức phá hủy và phương thức thiết lập sao chép
+Khi thiết kế các lớp đối tượng, có một nguyên tắc là nếu một lớp cần phải tự định nghĩa phương thức phá hủy, thì lớp đó cũng cần tự định nghĩa một phương thức thiết lập sao chép của riêng mình
+
+Trong ví dụ ở trên, nếu không làm gì thêm, ctrinh sẽ tự định nghĩa cho ta một phương thức thiết lập sao chép như sau:
+```cpp
+LopHoc (const LopHoc& temp)
+{
+	this->arr = temp.arr;
+	this->size = temp.size;
+}
+```
+Tại dòng số 2, địa chỉ mà biến-con-trỏ-arr-thuộc-đối-tượng-temp đang nắm giữ được sao
+chép vào biến con trỏ arr của đối tượng đang thực hiện lời gọi phương thức. Lúc này hai con
+trỏ có giá trị bằng nhau, tức là chúng đang cùng nắm giữ một vùng nhớ
+
+Để tránh lỗi trên, ta cần phải định nghĩa lại phương thức sao chép cho **LopHoc**
+```cpp
+LopHoc(const LopHoc& temp) {
+	size = temp.size;
+	arr = new HocSinh[size];
+	for (int i = 0; i < size; ++i) {
+		arr[i] = temp.arr[i];
+	}
+}
+```
+## Thành phần tĩnh
+Các thành phần tĩnh là các thành phần thuộc về một lớp chứ **không thuộc về một đối tượng** cụ thể. Điều này có nghĩa là tất cả các đối tượng của một lớp đều chia sẻ chung một thành phần tĩnh, và nó có thể được truy cập thông qua một đối tượng.
+
+Có hai loại thành phần tĩnh:
+- Các thuộc tính tĩnh
+- Hàm thành viên tĩnh
+### Khởi tạo thành viên tĩnh
+```cpp
+class HocSinh
+{
+private:
+	static int demHs;
+public:
+	static int getDemHocSinh ();
+};
+```
+### Cách gọi các thành viên tĩnh
+Chúng ta có thể truy cập trực tiếp một thành viên tĩnh thông qua toán tử phạm vi, vd:
+```cpp
+	int dem = HocSinh::getDemHs();
+```
+Mặc dù các thành viên tĩnh không phải là một phần đối tượng, chúng ta vẫn có thể dùng các đối tượng của một lớp để truy cập đến các thành phần tĩnh của lớp đó
+```cpp
+	HocSinh h1;
+ 	int dem = h1.getDemHs();
+```
+## Hàm bạn, lớp bạn (Friends)
+Hàm bạn là hàm có thể truy cập thành phần **private** hoặc **protected** của lớp xem nó là bạn
+
