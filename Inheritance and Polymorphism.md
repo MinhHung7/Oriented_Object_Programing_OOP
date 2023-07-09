@@ -114,5 +114,32 @@ Việc có thể gán địa chỉ của một đối tượng thuộc lớp d�
 thuộc lớp cơ sở dẫn đến một kết quả quan trọng: Khi sử dụng một con trỏ đối tượng thuộc
 lớp cơ sở, chúng ta không biết chắc được đối tượng mà con trỏ đó sẽ giữ có kiểu dữ liệu gì,
 nó có thể là một đối tượng thuộc lớp cơ sở hoặc lớp dẫn xuất. Điều này góp phần tạo nên
-tính đa hình trong OOP sẽ được tìm hiểu ở chương tới.
+tính đa hình trong OOP sẽ được tìm hiểu ở chương tới.<br>
 **Phép gán trực tiếp giữa các đối tượng**
+Ta cũng có thể gán trực tiếp một đối tượng thuộc lớp con cho một đối tượng thuộc lớp
+cha. Ngược lại, không thể gán một đối tượng của lớp cha cho một đối tượng thuộc lớp con.
+Tuy nhiên có một vài điểm cần lưu ý: Khi dùng một biến có kiểu lớp con khởi tạo cho một
+đối tượng thuộc lớp cha, chương trình sẽ chỉ sao chép những thuộc tính chung giữa 2 lớp
+mà không sao chép các thuộc tính riêng của lớp con. Đơn giản là vì lớp cha thì không thể
+biết được các lớp con của nó có các thuộc tính mới nào, nó chỉ biết được những thuộc tính
+đã được định nghĩa sẵn bên trong mình mà thôi.
+```cpp
+Quote item1;
+BulkQuote item2("13hd", 50000, 0.2, 3);
+item1 = item2;
+```
+Sau dòng lệnh trên, item1 lúc này chỉ chứa 2 thuộc tính là bookNo = 13hd và price =
+50000, 2 thuộc tính discount = 0.2 và minQty = 3 trong item2 đã bị lược bỏ.
+## Phương thức ảo (virtual function) và đa hình (Polymorphism)
+Lớp dẫn xuất được kế thừa từ các phương thức đã có ở lớp cơ sở, tuy nhiên hành vi của chúng có thể được tinh chỉnh để tương thích hơn với lớp dẫn xuất. Để làm vậy, lớp dẫn xuất cần phải được định nghĩa lại **một phiên bản khác** cho các phương thức đó.
+
+Trong lớp cơ sở, ta thêm từ khóa **virtual** vào trước phần khai báo của những phương thức mà lớp dẫn có thể **ghi đè** lại (**override**), những phương thức này sẽ được gọi là **phương thức ảo**. Khi gọi các phương thức ảo thông qua một con trỏ đối tượng, lời gọi sẽ được thực hiện theo cơ chế **đa hình**, cho phép xác định đúng hành vi (phương thức) sẽ được thực thi. Tùy thuộc vào kiểu dữ liệu của đối tượng mà con trỏ giữ địa chỉ, phiên bản của phương thức ảo nằm trong lớp cơ sở hoặc lớp dẫn xuất sẽ được thực hiện (nhớ lại rằng một con trỏ thuộc lớp cơ sở có thể giữ địa chỉ của một đối tượng thuộc lớp dẫn xuất).
+
+Ngoại trừ các phương thức tĩnh và phương thức thiết lập, các phương thức khác đều có thể được khai báo là phương thức ảo. Những phương thức được khai báo là **virtual** trong lớp cơ sở thì những phương thức **cùng tên** và **cùng danh sách tham số** đầu vào trong lớp dẫn xuất cũng sẽ là phương thức ảo.
+## Lớp cơ sở trừu tượng (Abstract base class)
+## Phương thức phá hủy trong kế thừa
+Như đã nói ở phần phương thức thiết lập trong kế thừa, khi một đối tượng được khởi tạo,
+các thuộc tính chung sẽ được khởi tạo trước rồi mới đến các thuộc tính riêng. Phương thức
+phá hủy thì ngược lại, khi một destructor của lớp con được gọi, nó sẽ thu hồi các tài nguyên
+đã cấp phát cho các thuộc tính riêng trước, rồi sau đó destructor của lớp cha mới được gọi
+để dọn dẹp các thuộc tính chung (rác của ai người đó dọn:v)
