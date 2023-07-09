@@ -186,4 +186,135 @@ operator KieuDL() {
 	return x; // x có kiểu dữ liệu là Kieu_DL
 }
 ```
-VD muốn chuyển phân số về số thực
+VD muốn chuyển phân số về **float**
+```cpp
+class PhanSo {
+	//...
+	operator float();
+};
+	// Định nghĩa
+	PhanSo::operator float() {
+	return (float)this->tu / this->mau;
+}
+```
+### Sự nhập nhằng
+Sự nhập nhằng xảy ra khi có chuyển kiểu bằng constructor lẫn chuyển bằng toán tử chuyển kiểu. Nó khiến cho trình biên dịch không xác định được nên chuyển kiểu bằng cách nào, dẫn đến việc mất đi cơ chế chuyển kiểu tự động (ngầm định)
+```cpp
+class PhanSo
+{
+	//...
+public:
+	PhanSo (int a);
+	operator float ();
+};
+
+int main ()
+{
+	PhanSo a (1, 2);
+	a + 2; 
+	2 + a;
+	// lỗi do không biết nên chuyển 5 thành phân số hay phân số thành float
+}
+```
+Cách xử lý duy nhất cho việc này là thực hiện chuyển kiểu tường minh, việc này làm mất đi sự tiện lợi của cơ chế chuyển đổi tự động. Do đó khi thực hiện chuyển kiểu, ta chỉ được chọn một trong hai, hoặc là chuyển đổi bằng constructor hoặc chuyển đổi bằng toán tử chuyển kiểu.
+## Toán tử nhập, xuất (input, output)
+Để nạp chồng toán tử nhập xuất, chúng ta sử dụng **hàm toàn cục** (và là **hàm bạn**), có **hai tham số**, tham số đầu tiên là một **tham chiếu** đến đối tượng kiểu **istream** hoặc **ostream**, tham số thứ hai là một **tham chiếu** tới đối tượng cần nhập/xuất, kiểu trả về của hàm chính là **tham chiếu** đến tham số đầu tiên của hàm (**istream** hoặc **ostream**).
+
+**Toán tử nhập**<br>
+Chúng ta sẽ thực hiện overload toán tử nhập cho lớp phân bố như sau:
+```cpp
+class PhanSo
+{
+	//...
+	friend istream& operator >> (istream&, PhanSo&);
+};
+istream& operator>>(istream& input, PhanSo& ps)
+{
+	input >> ps.tu;
+	input >> ps.mau;
+
+	return input;
+}
+```
+**Toán tử xuất**<br>
+```cpp
+class PhanSo
+{
+	//...
+	friend istream& operator >> (istream&, PhanSo&);
+	friend ostream& operator << (ostream&, const PhanSo&);
+};
+istream& operator>>(istream& input, PhanSo& ps)
+{
+	input >> ps.tu;
+	input >> ps.mau;
+
+	return input;
+}
+ostream& operator << (ostream& output, const PhanSo& ps)
+{
+	output << ps.tu << " / " << ps.mau;
+	return output;
+}
+```
+Khác biệt duy nhất nằm ở chỗ tham số thứ 2 của hàm này nên là một **tham chiếu hằng** nhằm tránh việc phải thực hiện sao chép quá nhiều (tốn tài nguyên) đồng thời đảm bảo đối số truyền vào sẽ không bị thay đổi
+## Toán tử so sánh (Relational Operator)
+```cpp
+class PhanSo
+{
+private:
+	int tu;
+	int mau;
+	//...
+	friend istream& operator >> (istream&, PhanSo&);
+	friend ostream& operator << (ostream&, PhanSo&);
+	friend bool operator > (const PhanSo& a, const PhanSo& b);
+};
+
+bool operator > (const PhanSo& a, const PhanSo& b)
+{
+	float gt1 = (float)a.tu / a.mau;
+	float gt2 = (float)b.tu / b.mau;
+
+	return gt1 > gt2;
+}
+```
+## Toán tử gán 
+```cpp
+class PhanSo
+{
+private:
+	int tu;
+	int mau;
+	//...
+	friend istream& operator >> (istream&, PhanSo&);
+	friend ostream& operator << (ostream&, PhanSo&);
+	friend bool operator > (const PhanSo& a, const PhanSo& b);
+	PhanSo& operator = (const PhanSo& a)
+	{
+		this->tu = a.tu;
+		this->mau = a.mau;
+		return *this;
+	}
+};
+```
+## Toán tử số học, gán kết hợp
+```cpp
+class PhanSo
+{
+private:
+	int tu;
+	int mau;
+	//...
+	friend istream& operator >> (istream&, PhanSo&);
+	friend ostream& operator << (ostream&, PhanSo&);
+	friend bool operator > (const PhanSo& a, const PhanSo& b);
+	PhanSo& operator += (const PhanSo& a)
+	{
+		this->tu += a.tu;
+		this->mau += a.mau;
+		return *this;
+	}
+};
+```
+
