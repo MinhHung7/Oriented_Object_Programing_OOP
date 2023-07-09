@@ -350,5 +350,27 @@ Mặc dù các thành viên tĩnh không phải là một phần đối tượng
  	int dem = h1.getDemHs();
 ```
 ## Hàm bạn, lớp bạn (Friends)
+### Hàm bạn
 Hàm bạn là hàm có thể truy cập thành phần **private** hoặc **protected** của lớp xem nó là bạn
-
+```cpp
+class MyClass1
+{
+private:
+	int tpRiengTu;
+	friend void myFunct (MyClass1 mClass);
+};
+void myFunct (MyClass1 mClass)
+{
+	cout << mClass.tpRiengTu;
+}
+```
+### Lớp bạn
+Tương tự,  lớp bạn là lớp có thể truy cập thành phần **private** hoặc **Protected** của lớp xem nó là bạn
+```cpp
+class MyClass2 {
+public:
+	void myMethod(MyClass1 mClass) {
+		cout << mClass.tpRiengTu; // Không hợp lệ
+	}
+};
+```
