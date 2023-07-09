@@ -273,6 +273,29 @@ int main(){
     return 0;
 }
 ```
-Khi chương trình kết thúc, đối tượng **lóp** bị phá hủy, kéo theo  
-
-
+Khi chương trình kết thúc, đối tượng **lóp** bị phá hủy, kéo theo các dữ liệu thành phần là **arr** và **size** bị phá hủy theo, tuy nhiên vùng nhớ được cấp phát cho biến con trỏ arr vẫn còn đó mà chưa được thu hồi.<br>
+Để giải quyết vấn đề này, ta sẽ định nghĩa cho lớp LopHoc một phương thức phá hủy như
+sau:
+```cpp
+~LopHoc(){
+	cout << "Destructor has been called" << endl;
+	delete[] arr;
+}
+```
+Nếu chúng ta không tự định nghĩa một phương thức phá hủy, chương trình cũng sẽ tự
+định cho ta một phiên bản như đây:
+```cpp
+	~LopHoc() { }
+```
+Phương thức phá hủy này không thực hiện bất cứ thao tác gì nên có thân hàm rỗng. Đối với
+những lớp đối tượng có thành phần được khai báo tĩnh thì có thể sử dụng phiên bản do
+chương trình tự định nghĩa mà không cần phải tự định nghĩa một phiên bản riêng<br>
+**Một số trường hợp khác mà phương thức phá hủy được gọi:**
+- Đối tượng bị phá hủy khi ra khỏi phạm vi hoạt động
+- Đối tượng được cấp phát động bị hủy khi sử dụng toán tử **delete** lên biến con trỏ trỏ tới nó
+```cpp
+ HocSinh* hsPtr = new HocSinh();
+ delete hsPtr;   // Phương thức phá hủy của biến học sinh được gọi
+```
+- Các dữ liệu thành viên bị hủy và đối tượng chúng thuộc về bị hủy
+### Phương thức phá hủy và phương thức thiết lập sao chép
