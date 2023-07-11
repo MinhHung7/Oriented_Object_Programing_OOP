@@ -134,50 +134,50 @@ int main ()
 ### Chuyển kiểu
 Có 2 loại chuyển kiểu:
 - Chuyển kiểu bằng constructor
-- Chuyển kiểu bằng toán tử chuyển kiểu
+- Chuyển kiểu bằng toán tử chuyển kiểu<br>
 **Chuyển kiểu bằng constructor**
   ```cpp
   #include<iostream>
-using namespace std;
-
-class PhanSo
-{
-private:
-	int tu, mau;
-public:
-	PhanSo (int tu, int mau)
+	using namespace std;
+	
+	class PhanSo
 	{
-		this->tu= tu;
-		this->mau = mau;
-	}
-	PhanSo (int a)
+	private:
+		int tu, mau;
+	public:
+		PhanSo (int tu, int mau)
+		{
+			this->tu= tu;
+			this->mau = mau;
+		}
+		PhanSo (int a)
+		{
+			this->tu = a;
+			this->mau = 1;
+		}
+		PhanSo ()
+		{
+			tu = 0;
+			mau = 0;
+		}
+		friend PhanSo operator+(const PhanSo& ps1, const PhanSo& ps2);
+
+	};
+	
+	PhanSo operator +(const PhanSo& ps1, const PhanSo& ps2)
 	{
-		this->tu = a;
-		this->mau = 1;
+		PhanSo kq;
+		kq.mau = ps1.mau * ps2.mau;
+		kq.tu = ps1.tu * ps2.mau + ps1.mau * ps2.tu;
+		return kq;
 	}
-	PhanSo ()
+	
+	int main ()
 	{
-		tu = 0;
-		mau = 0;
+		PhanSo a (1, 2);
+		int i = 1;
+		PhanSo c = a + i;
 	}
-	friend PhanSo operator+(const PhanSo& ps1, const PhanSo& ps2);
-
-};
-
-PhanSo operator +(const PhanSo& ps1, const PhanSo& ps2)
-{
-	PhanSo kq;
-	kq.mau = ps1.mau * ps2.mau;
-	kq.tu = ps1.tu * ps2.mau + ps1.mau * ps2.tu;
-	return kq;
-}
-
-int main ()
-{
-	PhanSo a (1, 2);
-	int i = 1;
-	PhanSo c = a + i;
-}
 	```
 **Chuyển kiểu bằng toán tử chuyển kiểu**
 Cú pháp
