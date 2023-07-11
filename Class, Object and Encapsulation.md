@@ -43,7 +43,7 @@ void HocSinh::nhap(){
 }
 ```
 ## Giới thiệu về con trỏ this
-- Con trỏ hằng (const pointer) là con trỏ mà địa chỉ ns đang giữ không thể bị thay đổi
+- Con trỏ hằng (const pointer) là con trỏ mà địa chỉ nó đang giữ không thể bị thay đổi
 ```cpp
 HocSinh* const p = &hs;
 ```
