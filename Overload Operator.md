@@ -40,7 +40,7 @@ Chúng ta sẽ overload hàm có tên **"operator@"**, với **@** là các toá
 	```
 - **Cài đặt hàm toàn cục**
 Thông thường nếu ta sử dụng operator+(PhanSo a) thì ta sẽ có PhanSo + PhanSo
-<br>Nếu ta dungf operator-(int i) thì ta có PhanSo + i
+<br>Nếu ta dùng operator + (int i) thì ta có PhanSo + i
 <br> Vậy để có i + PhanSo, ta **cài đặt toàn cục**
 ```cpp
 #include<iostream>
